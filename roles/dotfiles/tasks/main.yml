@@ -1,0 +1,23 @@
+---
+# tasks file for dotfiles
+- name: Install git
+  ansible.builtin.package:
+    name: git
+    state: present
+  become: true
+
+- name: Checkout dotfiles
+  ansible.builtin.git:
+    repo: 'https://github.com/gionn/dotfiles.git'
+    dest: "{{ user_home }}/.dotfiles"
+
+- name: Set dotfiles_dir
+  set_fact:
+    dotfiles_dir: "{{ user_home }}/.dotfiles"
+
+- name: Link gitconfig from dotfiles
+  ansible.builtin.file:
+    src: "{{ dotfiles_dir }}/gitconfig"
+    dest: "{{ user_home }}/.gitconfig"
+    state: link
+    force: yes

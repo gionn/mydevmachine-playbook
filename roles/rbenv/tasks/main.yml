@@ -1,0 +1,13 @@
+---
+# tasks file for rbenv
+- name: Checkout rbenv
+  ansible.builtin.git:
+    repo: 'https://github.com/rbenv/rbenv.git'
+    dest: "{{ user_home }}/.rbenv"
+    version: v1.2.0
+
+- name: Checkout ruby-build
+  ansible.builtin.git:
+    repo: 'https://github.com/rbenv/ruby-build.git'
+    dest: "{{ user_home }}/.rbenv/plugins/ruby-build"
+    version: master

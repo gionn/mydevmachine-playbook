@@ -1,0 +1,7 @@
+all:
+  hosts:
+    localhost:
+      user_name: gionn
+      user_home: /home/gionn
+      docker_users:
+        - gionn

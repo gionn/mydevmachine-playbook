@@ -1,0 +1,35 @@
+---
+# tasks file for zsh
+- name: Install zsh
+  ansible.builtin.package:
+    name: zsh
+    state: present
+  become: true
+
+- name: Checkout prezto
+  ansible.builtin.git:
+    repo: 'https://github.com/sorin-ionescu/prezto.git'
+    dest: "{{ user_home }}/.zprezto"
+
+- name: Place default runcoms in user home
+  ansible.builtin.shell: |
+    setopt EXTENDED_GLOB
+    for rcfile in "${ZDOTDIR:-$HOME}"/.zprezto/runcoms/^README.md(.N); do
+      ln -s "$rcfile" "${ZDOTDIR:-$HOME}/.${rcfile:t}"
+    done
+  args:
+    creates: "{{ user_home }}/.zshrc"
+    executable: /usr/bin/zsh
+  
+- name: Link zpreztorc from dotfiles
+  ansible.builtin.file:
+    src: "{{ dotfiles_dir }}/zpreztorc"
+    dest: "{{ user_home }}/.zpreztorc"
+    state: link
+    force: yes
+
+- name: change shell to zsh 
+  become: true
+  user:
+    name: "{{ user_name }}"
+    shell: /usr/bin/zsh

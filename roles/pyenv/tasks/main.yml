@@ -1,0 +1,13 @@
+---
+# tasks file for pyenv
+- name: Install pyenv prerequisites
+  ansible.builtin.package:
+    name: "{{ pyenv_dependencies_packages }}"
+    state: present
+  become: true
+
+- name: Checkout pyenv
+  ansible.builtin.git:
+    repo: 'https://github.com/pyenv/pyenv.git'
+    dest: "{{ user_home }}/.pyenv"
+    version: v2.2.4-1

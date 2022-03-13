@@ -1,0 +1,45 @@
+---
+
+- name: Configure laptop
+  gather_facts: true
+  hosts: localhost
+  connection: local
+  tasks:
+
+    - name: Display the config
+      debug:
+        msg: "The hostname is {{ ansible_hostname }} and the OS is {{ ansible_os_family }}"
+
+    - name: Update apt cache
+      apt:
+        update_cache: yes
+      become: true
+
+    - name: Download vscode
+      get_url:
+        url: https://az764295.vo.msecnd.net/stable/c722ca6c7eed3d7987c0d5c3df5c45f6b15e77d1/code_1.65.2-1646927742_amd64.deb
+        dest: /tmp/code.deb
+      register: download
+
+    - name: Install vscode
+      apt:
+        deb: "{{ download.dest }}"
+      become: true
+
+    - name: Include geerlingguy.docker role
+      include_role:
+        name: geerlingguy.docker
+        apply:
+          become: true
+
+    - name: Include dotfiles role
+      include_role:
+        name: dotfiles
+
+    - name: Include zsh role
+      include_role:
+        name: zsh
+
+    - name: Include pyenv role
+      include_role:
+        name: pyenv
