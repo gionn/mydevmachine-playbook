@@ -42,3 +42,24 @@
         curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.1/install.sh | bash
       args:
         creates: "{{ ansible_env.HOME }}/.nvm/nvm.sh"
+
+    - name: hook nvm
+      blockinfile:
+        path: /home/gionn/.zprezto/runcoms/zshrc
+        block: |
+          export NVM_DIR="$HOME/.nvm"
+          [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
+          [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
+        marker: "# {mark} ANSIBLE MANAGED BLOCK NVM"
+
+    - name: install direnv
+      ansible.builtin.package:
+        name: direnv
+      become: true
+
+    - name: hook direnv
+      blockinfile:
+        path: /home/gionn/.zprezto/runcoms/zshrc
+        block: |
+          eval "$(direnv hook zsh)"
+        marker: "# {mark} ANSIBLE MANAGED BLOCK DIRENV"
